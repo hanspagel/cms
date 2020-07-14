@@ -4,6 +4,7 @@ namespace Statamic\Taxonomies;
 
 use Statamic\Contracts\Taxonomies\Term as TermContract;
 use Statamic\Data\ExistsAsFile;
+use Statamic\Events\BlueprintFound;
 use Statamic\Events\Data\TermDeleted;
 use Statamic\Events\Data\TermSaved;
 use Statamic\Facades;
@@ -76,11 +77,20 @@ class Term implements TermContract
     {
         return $this->fluentlyGetOrSet('blueprint')
             ->getter(function ($blueprint) {
-                return $blueprint
-                    ? $this->taxonomy()->ensureTermBlueprintFields(Blueprint::find($blueprint))
-                    : $this->taxonomy()->termBlueprint();
+                return $this->getTermBlueprint($blueprint);
             })
             ->args(func_get_args());
+    }
+
+    protected function getTermBlueprint($blueprint)
+    {
+        $blueprint = $blueprint
+            ? $this->taxonomy()->ensureTermBlueprintFields(Blueprint::find($blueprint))
+            : $this->taxonomy()->termBlueprint();
+
+        event(new BlueprintFound($blueprint, 'term'));
+
+        return $blueprint;
     }
 
     public function fileData()

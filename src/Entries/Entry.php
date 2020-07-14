@@ -14,6 +14,7 @@ use Statamic\Data\HasAugmentedInstance;
 use Statamic\Data\HasOrigin;
 use Statamic\Data\Publishable;
 use Statamic\Data\TracksQueriedColumns;
+use Statamic\Events\BlueprintFound;
 use Statamic\Events\Data\EntryDeleted;
 use Statamic\Events\Data\EntrySaved;
 use Statamic\Events\Data\EntrySaving;
@@ -89,11 +90,20 @@ class Entry implements Contract, Augmentable, Responsable, Localization
     {
         return $this->fluentlyGetOrSet('blueprint')
             ->getter(function ($blueprint) {
-                return $blueprint
-                    ? $this->collection()->ensureEntryBlueprintFields(Blueprint::find($blueprint))
-                    : $this->defaultBlueprint();
+                return $this->getEntryBlueprint($blueprint);
             })
             ->args(func_get_args());
+    }
+
+    protected function getEntryBlueprint($blueprint)
+    {
+        $blueprint = $blueprint
+            ? $this->collection()->ensureEntryBlueprintFields(Blueprint::find($blueprint))
+            : $this->defaultBlueprint();
+
+        event(new BlueprintFound($blueprint, 'entry'));
+
+        return $blueprint;
     }
 
     public function collectionHandle()

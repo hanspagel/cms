@@ -4,7 +4,6 @@ namespace Statamic\Http\Controllers\CP\Taxonomies;
 
 use Illuminate\Http\Request;
 use Statamic\Contracts\Taxonomies\Term as TermContract;
-use Statamic\Events\PublishBlueprintFound;
 use Statamic\Facades\Asset;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Site;
@@ -78,8 +77,6 @@ class TermsController extends CpController
         $term = $term->fromWorkingCopy();
 
         $blueprint = $term->blueprint();
-
-        event(new PublishBlueprintFound($blueprint, 'term', $term));
 
         [$values, $meta] = $this->extractFromFields($term, $blueprint);
 

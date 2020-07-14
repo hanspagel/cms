@@ -5,7 +5,6 @@ namespace Statamic\Http\Controllers\CP\Collections;
 use Illuminate\Http\Request;
 use Statamic\Contracts\Entries\Entry as EntryContract;
 use Statamic\CP\Breadcrumbs;
-use Statamic\Events\PublishBlueprintFound;
 use Statamic\Facades\Asset;
 use Statamic\Facades\Blueprint;
 use Statamic\Facades\Entry;
@@ -76,8 +75,6 @@ class EntriesController extends CpController
         $entry = $entry->fromWorkingCopy();
 
         $blueprint = $entry->blueprint();
-
-        event(new PublishBlueprintFound($blueprint, 'entry', $entry));
 
         [$values, $meta] = $this->extractFromFields($entry, $blueprint);
 

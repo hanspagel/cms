@@ -2,7 +2,7 @@
 
 namespace Statamic\Events;
 
-class PublishBlueprintFound extends Event
+class BlueprintFound extends Event
 {
     public $blueprint;
     public $type;
