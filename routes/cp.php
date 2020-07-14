@@ -36,6 +36,7 @@ Route::middleware('statamic.cp.authenticated')->group(function () {
         Route::post('collections/{collection}/structure', 'CollectionStructureController@update')->name('collections.structure.update');
         Route::get('collections/{collection}/scaffold', 'ScaffoldCollectionController@index')->name('collections.scaffold');
         Route::post('collections/{collection}/scaffold', 'ScaffoldCollectionController@create')->name('collections.scaffold.create');
+        Route::resource('collections.blueprints', 'CollectionBlueprintsController');
 
         Route::group(['prefix' => 'collections/{collection}/entries'], function () {
             Route::get('/', 'EntriesController@index')->name('collections.entries.index');
@@ -104,6 +105,9 @@ Route::middleware('statamic.cp.authenticated')->group(function () {
 
         Route::get('globals/{global_set}', 'GlobalVariablesController@edit')->name('globals.variables.edit');
         Route::patch('globals/{global_set}/variables', 'GlobalVariablesController@update')->name('globals.variables.update');
+
+        Route::get('globals/{global_set}/blueprint', 'GlobalsBlueprintController@edit')->name('globals.blueprint');
+        Route::patch('globals/{global_set}/blueprint', 'GlobalsBlueprintController@update');
     });
 
     Route::group(['namespace' => 'Assets'], function () {
@@ -132,7 +136,7 @@ Route::middleware('statamic.cp.authenticated')->group(function () {
         Route::resource('fieldsets', 'FieldsetController');
         Route::post('fieldsets/quick', 'FieldsetController@quickStore');
         Route::post('fieldsets/{fieldset}/fields', 'FieldsetFieldController@store');
-        Route::resource('blueprints', 'BlueprintController');
+        Route::get('blueprints', 'BlueprintController@index')->name('blueprints.index');
         Route::get('fieldtypes', 'FieldtypesController@index');
         Route::get('publish-blueprints/{blueprint}', 'PublishBlueprintController@show');
     });

@@ -32,6 +32,7 @@ class EditGlobalVariablesTest extends TestCase
     /** @test */
     public function it_shows_the_form()
     {
+        $this->withoutExceptionHandling();
         $blueprint = Blueprint::make()->setContents(['fields' => [
             ['handle' => 'foo', 'field' => ['type' => 'text']],
             ['handle' => 'unused', 'field' => ['type' => 'text']],
